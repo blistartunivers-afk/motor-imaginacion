@@ -28,37 +28,35 @@ async function loadDream(filename) {
 
 function parsePGM(buffer) {
     const data = new Uint8Array(buffer);
-    const decoder = new TextDecoder('ascii');
-    let i = 0;
+    const text = new TextDecoder('ascii').decode(data);
+    const tokens = text.split(/\s+/);
 
-    // Skip P5 header (P5\n width height\n maxval\n)
-    let line = '';
-    function readLine() {
-        line = '';
-        while (i < data.length && data[i] !== 10) {
-            line += String.fromCharCode(data[i]);
-            i++;
+    // Magic: P2 (texto) o P5 (binario)
+    const magic = tokens[0];
+
+    // Saltar magic
+    let idx = 1;
+    while (idx < tokens.length && (tokens[idx].startsWith('#') || tokens[idx] === '')) idx++;
+
+    const w = parseInt(tokens[idx++]);
+    const h = parseInt(tokens[idx++]);
+    const maxval = parseInt(tokens[idx++]);
+
+    if (magic === 'P5') {
+        // Binario: el resto es w*h bytes crudos
+        const headerBytes = data.length - (w * h);
+        const pixels = data.slice(headerBytes);
+        return { w, h, data: pixels };
+    } else if (magic === 'P2') {
+        // Texto ASCII: parsear números
+        const pixels = new Uint8Array(w * h);
+        for (let p = 0; p < w * h && idx < tokens.length; p++) {
+            pixels[p] = parseInt(tokens[idx++]);
         }
-        i++; // skip \n
-        // Skip comments
-        while (line.startsWith('#')) {
-            line = '';
-            while (i < data.length && data[i] !== 10) {
-                line += String.fromCharCode(data[i]);
-                i++;
-            }
-            i++;
-        }
-        return line.trim();
+        return { w, h, data: pixels };
+    } else {
+        throw new Error(`PGM formato desconocido: ${magic}`);
     }
-
-    readLine(); // magic P5
-    const dims = readLine().split(/\s+/);
-    const w = parseInt(dims[0]);
-    const h = parseInt(dims[1]);
-    readLine(); // maxval 255
-
-    return { w, h, data: data.slice(i) };
 }
 
 function pgmToCanvas({ w, h, data }) {
