@@ -10,6 +10,32 @@
             --cyan: #00ccff;
             --bg: #0a0a0a;
             --panel: #111;
+            --accent: #ff00aa;
+            --glow: 0 0 10px var(--neon), 0 0 20px var(--neon);
+        }
+        [data-palette="cyberpunk"] {
+            --neon: #ffea00;
+            --neon-dim: #b89c00;
+            --cyan: #ff0099;
+            --bg: #0a0014;
+            --panel: #1a0028;
+            --accent: #ff0099;
+        }
+        [data-palette="sunset"] {
+            --neon: #ff8855;
+            --neon-dim: #aa4422;
+            --cyan: #ffcc66;
+            --bg: #1a0a14;
+            --panel: #2a1018;
+            --accent: #ff5588;
+        }
+        [data-palette="forest"] {
+            --neon: #88dd44;
+            --neon-dim: #447722;
+            --cyan: #aaffaa;
+            --bg: #050a08;
+            --panel: #0d1810;
+            --accent: #44ffaa;
         }
 
         * { box-sizing: border-box; }
@@ -241,6 +267,140 @@
             0%, 100% { opacity: 1; box-shadow: 0 0 5px var(--cyan); }
             50%      { opacity: 0.6; box-shadow: 0 0 20px var(--cyan); }
         }
+
+        /* === SELECTOR DE PALETAS === */
+        #palette-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            display: flex;
+            gap: 8px;
+            background: rgba(0,0,0,0.6);
+            padding: 8px;
+            border: 1px solid var(--neon-dim);
+            border-radius: 30px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            animation: fadeInGlitch 1s ease-out 1.5s both;
+        }
+        .palette-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .palette-btn:hover {
+            transform: scale(1.25);
+            box-shadow: 0 0 12px currentColor;
+        }
+        .palette-btn.active {
+            border-color: #fff;
+            box-shadow: 0 0 10px var(--neon);
+            transform: scale(1.15);
+        }
+        .palette-btn[data-set="neon"]      { background: linear-gradient(135deg, #00ffaa, #00ccff); }
+        .palette-btn[data-set="cyberpunk"] { background: linear-gradient(135deg, #ffea00, #ff0099); }
+        .palette-btn[data-set="sunset"]    { background: linear-gradient(135deg, #ff8855, #ffcc66); }
+        .palette-btn[data-set="forest"]    { background: linear-gradient(135deg, #88dd44, #aaffaa); }
+
+        /* === CURSOR PARALLAX 3D === */
+        .gallery {
+            perspective: 1200px;
+        }
+        .dream {
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        .dream::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                300px circle at var(--mx, 50%) var(--my, 50%),
+                rgba(255,255,255,0.12),
+                transparent 60%
+            );
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+        .dream:hover::after {
+            opacity: 1;
+        }
+
+        /* === MODAL ZOOM === */
+        #modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            cursor: zoom-out;
+            animation: modalIn 0.3s ease-out;
+        }
+        #modal.active { display: flex; }
+        @keyframes modalIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        #modal-content {
+            max-width: 92vw;
+            max-height: 88vh;
+            position: relative;
+            animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes modalPop {
+            from { transform: scale(0.5); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+        #modal-canvas {
+            width: 100%;
+            height: auto;
+            max-height: 88vh;
+            image-rendering: pixelated;
+            border: 2px solid var(--neon);
+            border-radius: 8px;
+            box-shadow: 0 0 40px var(--neon), 0 0 80px rgba(0,255,170,0.3);
+            cursor: zoom-out;
+        }
+        #modal-caption {
+            text-align: center;
+            margin-top: 12px;
+            color: var(--neon);
+            font-size: 1em;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px var(--neon);
+        }
+        #modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: var(--neon);
+            font-size: 1.5em;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--neon);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        #modal-close:hover {
+            transform: rotate(90deg) scale(1.15);
+            box-shadow: 0 0 15px var(--neon);
+        }
     </style>
 </head>
 <body>
@@ -251,6 +411,24 @@
     <p class="footer">
         Motor de imaginacion autonoma - <a href="https://github.com/blistartunivers-afk/motor-imaginacion">Repositorio</a>
     </p>
+
+    <!-- Selector de paletas -->
+    <div id="palette-bar">
+        <div class="palette-btn active" data-set="neon"      title="Neón"></div>
+        <div class="palette-btn"        data-set="cyberpunk" title="Cyberpunk"></div>
+        <div class="palette-btn"        data-set="sunset"    title="Sunset"></div>
+        <div class="palette-btn"        data-set="forest"    title="Forest"></div>
+    </div>
+
+    <!-- Modal zoom fullscreen -->
+    <div id="modal">
+        <div id="modal-content">
+            <div id="modal-close">✕</div>
+            <canvas id="modal-canvas"></canvas>
+            <div id="modal-caption"></div>
+        </div>
+    </div>
+
     <script src="dream-loader.js"></script>
 </body>
 </html>
