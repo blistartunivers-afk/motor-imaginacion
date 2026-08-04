@@ -50,20 +50,6 @@
     <p class="footer">
         Motor de imaginacion autonoma - <a href="https://github.com/blistartunivers-afk/motor-imaginacion">Repositorio</a>
     </p>
-    <script>
-        // Listar las imagenes reales que existen en gallery/
-        fetch('gallery/INDEX.txt').then(r => r.text()).then(txt => {
-            const files = txt.split('\n').filter(f => f.trim().endsWith('.pgm'));
-            const gallery = document.getElementById('gallery');
-            files.forEach(file => {
-                const div = document.createElement('div');
-                div.className = 'dream';
-                div.innerHTML = `<img src="gallery/${file}" alt="${file}"><p>${file}</p>`;
-                gallery.appendChild(div);
-            });
-        }).catch(e => {
-            document.getElementById('gallery').innerHTML = '<p>Galeria aun sin suenos. Espera al primer ciclo semanal.</p>';
-        });
-    </script>
+    <script src="dream-loader.js"></script>
 </body>
 </html>
