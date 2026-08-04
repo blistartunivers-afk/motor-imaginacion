@@ -82,7 +82,9 @@ async function loadDream(filename) {
 
 async function renderGallery() {
     const gallery = document.getElementById('gallery');
-    gallery.innerHTML = '<p>Cargando sueños del repositorio...</p>';
+    const status = document.getElementById('status');
+
+    if (status) status.textContent = '⟳ Conectando al repositorio neural...';
 
     try {
         const resp = await fetch('gallery/INDEX.txt');
@@ -92,13 +94,20 @@ async function renderGallery() {
 
         if (files.length === 0) {
             gallery.innerHTML = '<p>Galería aún sin sueños. Espera al primer ciclo.</p>';
+            if (status) status.remove();
             return;
         }
 
+        if (status) status.textContent = `⟳ Decodificando ${files.length} sueños CPPN...`;
+
         gallery.innerHTML = '';
-        for (const file of files) {
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (status) status.textContent = `⟳ Renderizando sueño ${i + 1}/${files.length}...`;
+
             const wrap = document.createElement('div');
             wrap.className = 'dream';
+            wrap.style.setProperty('--i', i);
 
             const canvas = await loadDream(file);
             wrap.appendChild(canvas);
@@ -109,8 +118,17 @@ async function renderGallery() {
 
             gallery.appendChild(wrap);
         }
+
+        if (status) {
+            status.textContent = `✓ ${files.length} sueños cultivados`;
+            status.style.color = 'var(--neon)';
+            status.style.borderColor = 'var(--neon)';
+            status.style.animation = 'none';
+            setTimeout(() => status.remove(), 3000);
+        }
     } catch (err) {
         gallery.innerHTML = `<p style="color:#ff5577">Error: ${err.message}</p>`;
+        if (status) status.textContent = '✗ Error de carga';
         console.error('dream-loader:', err);
     }
 }
