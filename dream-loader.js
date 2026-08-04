@@ -13,7 +13,9 @@ async function loadDream(filename) {
         cloned.getContext('2d').drawImage(dreamsCache[filename], 0, 0);
         return cloned;
     }
-    const resp = await fetch(`gallery/${filename}`);
+    // Cache-buster: fuerza descarga sin caché
+    const resp = await fetch(`gallery/${filename}?t=${Date.now()}`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} al cargar ${filename}`);
     const buf = await resp.arrayBuffer();
     const pgm = parsePGM(buf);
     const canvas = pgmToCanvas(pgm);
@@ -109,6 +111,20 @@ async function renderGallery() {
 
             const canvas = await loadDream(file);
             canvas.style.cursor = 'zoom-in';
+
+            // Debug: detectar canvas vacío (todo gris/negro)
+            const ctx = canvas.getContext('2d');
+            const sample = ctx.getImageData(canvas.width/2, canvas.height/2, 1, 1).data;
+            const isEmpty = (sample[0] === 0 && sample[1] === 0 && sample[2] === 0);
+            if (isEmpty) {
+                const err = document.createElement('p');
+                err.textContent = '⚠ Canvas vacío en ' + file;
+                err.style.color = '#ff5577';
+                err.style.fontSize = '10px';
+                wrap.appendChild(err);
+                console.error('Canvas vacío:', file);
+            }
+
             wrap.appendChild(canvas);
 
             const caption = document.createElement('p');
