@@ -30,6 +30,14 @@ Este repositorio funciona de manera **100% autodependiente**:
 
 ---
 
+## 🎨 Paletas Perceptuales y Entropía Espacial (Fase 2)
+
+El motor de imaginación ha sido actualizado con capacidades avanzadas de análisis y renderizado:
+- **Paletas Perceptualmente Uniformes:** Soporte nativo para mapas de color de alta fidelidad científica (`viridis`, `magma`, `plasma`, `inferno`, `turbo`). Estas paletas garantizan que la progresión de color sea lineal respecto a la percepción humana, evitando artefactos visuales falsos.
+- **Entropía Espacial 2D:** Además de la entropía de Shannon clásica (que mide la distribución global de grises), se calcula la entropía espacial basada en la varianza local de vecindarios de $3\times3$ píxeles. Esto permite cuantificar la complejidad estructural y la textura de los patrones generados, distinguiendo imágenes con gradientes suaves de aquellas con alta frecuencia espacial.
+
+---
+
 ## 📜 Licencia
 
 MIT License © 2026 blistartunivers-afk

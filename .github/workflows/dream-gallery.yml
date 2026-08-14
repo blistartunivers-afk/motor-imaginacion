@@ -34,9 +34,11 @@ jobs:
       - name: Run diversity tests
         run: python -m unittest discover tests/ -v
 
-      - name: Generate 8 dream PNGs (512x512)
+      - name: Generate 8 dream PNGs (512x512, paleta perceptualmente uniforme)
         # Una sola corrida con --count 8 + --update-index reescribe INDEX.txt
         # con todos los archivos (incluyendo legacy .pgm).
+        # Default: viridis. Para rotar, edita la linea --palette abajo:
+        #   viridis | magma | plasma | inferno | turbo | raw
         run: >-
           python scripts/generate_gallery.py
           --count 8
@@ -44,6 +46,7 @@ jobs:
           --height 512
           --format png
           --out-dir gallery
+          --palette viridis
           --update-index
 
       - name: Commit gallery updates

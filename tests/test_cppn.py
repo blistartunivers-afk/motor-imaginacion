@@ -13,6 +13,12 @@ from scripts.generate_gallery import (
     generate_cppn_image,
     save_pgm,
     save_png,
+    list_palettes,
+)
+from scripts.palettes import (
+    get_palette,
+    apply_palette,
+    spatial_entropy_2d,
 )
 
 try:
@@ -99,8 +105,65 @@ class TestCPPNImage(unittest.TestCase):
             self.assertEqual(len(pngs), 3)
             self.assertIn("INDEX.txt", files)
             with open(os.path.join(tmp, "INDEX.txt")) as f:
-                lines = [l.strip() for l in f if l.strip()]
+                # Filtramos lineas vacias y comentarios de cabecera (#).
+                lines = [
+                    l.strip() for l in f
+                    if l.strip() and not l.strip().startswith("#")
+                ]
             self.assertEqual(len(lines), 3)
+            # Cada linea debe empezar por 'dream_' y terminar en '.png'.
+            for name in lines:
+                self.assertTrue(name.startswith("dream_"))
+                self.assertTrue(name.endswith(".png"))
+
+    # ---------------------------------------------------------------------------
+    # Fase 2: Paletas perceptualmente uniformes y entropia espacial.
+    # ---------------------------------------------------------------------------
+
+    def test_palettes_all_available(self):
+        """Las 5 paletas prometidas estan registradas."""
+        self.assertEqual(
+            set(list_palettes()),
+            {"viridis", "magma", "plasma", "inferno", "turbo"},
+        )
+
+    def test_palette_determinism(self):
+        """Cada paleta es determinista: mismo indice -> mismo RGB."""
+        for name in list_palettes():
+            lut = get_palette(name)
+            self.assertEqual(len(lut), 256, f"LUT size para {name}")
+            # Indices extremos: bajo vs alto.
+            self.assertNotEqual(lut[0], lut[255], f"{name} monotonica")
+            # Muestreo determinista.
+            self.assertEqual(apply_palette(0.0, lut), lut[0])
+            self.assertEqual(apply_palette(1.0, lut), lut[255])
+
+    def test_palette_changes_pixels(self):
+        """Distintas paletas producen colores distintos para mismo seed."""
+        W = H = 32
+        seen = set()
+        for name in list_palettes():
+            pixels, _, _ = generate_cppn_image(W, H, seed=123, palette=name)
+            seen.add(pixels[16][16])
+        # Al menos 4 colores distintos entre las 5 paletas.
+        self.assertGreaterEqual(len(seen), 4)
+
+    def test_spatial_entropy_per_image(self):
+        """La metadata incluye entropy_spatial con valor entre 0 y 3."""
+        _, _, meta = generate_cppn_image(64, 64, seed=7)
+        self.assertIn("entropy_spatial", meta)
+        es = meta["entropy_spatial"]
+        self.assertGreater(es, 0.0)
+        self.assertLessEqual(es, 3.0)
+
+    def test_spatial_entropy_varies_with_seeds(self):
+        """La entropia espacial distingue imagenes aunque tengan shannon similar."""
+        es_values = set()
+        for seed in range(5):
+            _, _, meta = generate_cppn_image(48, 48, seed=seed)
+            es_values.add(round(meta["entropy_spatial"], 2))
+        # Esperamos al menos 3 valores distintos entre 5 semillas.
+        self.assertGreaterEqual(len(es_values), 3)
 
 
 if __name__ == "__main__":
