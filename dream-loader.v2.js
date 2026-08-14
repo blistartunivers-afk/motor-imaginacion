@@ -16,9 +16,23 @@ async function loadDream(filename) {
     // Cache-buster: fuerza descarga sin caché
     const resp = await fetch(`gallery/${filename}?t=${Date.now()}`);
     if (!resp.ok) throw new Error(`HTTP ${resp.status} al cargar ${filename}`);
-    const buf = await resp.arrayBuffer();
-    const pgm = parsePGM(buf);
-    const canvas = pgmToCanvas(pgm);
+
+    const isPNG = filename.toLowerCase().endsWith('.png');
+    let canvas;
+    if (isPNG) {
+        // PNG: decodificación nativa del navegador (rápida).
+        const blob = await resp.blob();
+        const bitmap = await createImageBitmap(blob);
+        canvas = document.createElement('canvas');
+        canvas.width = bitmap.width;
+        canvas.height = bitmap.height;
+        canvas.getContext('2d').drawImage(bitmap, 0, 0);
+    } else {
+        // Legacy: .pgm parseado a mano (mantener para archivos antiguos).
+        const buf = await resp.arrayBuffer();
+        const pgm = parsePGM(buf);
+        canvas = pgmToCanvas(pgm);
+    }
     dreamsCache[filename] = canvas;
 
     const cloned = document.createElement('canvas');
@@ -89,7 +103,9 @@ async function renderGallery() {
         const resp = await fetch('gallery/INDEX.txt');
         if (!resp.ok) throw new Error('INDEX.txt no encontrado');
         const txt = await resp.text();
-        const files = txt.split('\n').map(f => f.trim()).filter(f => f.endsWith('.pgm'));
+        const files = txt.split('\n').map(f => f.trim()).filter(
+            f => f.endsWith('.pgm') || f.endsWith('.png')
+        );
 
         if (files.length === 0) {
             gallery.innerHTML = '<p>Galería aún sin sueños. Espera al primer ciclo.</p>';
