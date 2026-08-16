@@ -153,19 +153,21 @@ def _shannon_entropy_from_intensity(intensity):
 
 
 def _spatial_entropy(intensity):
-    """Entropía espacial 2D: varianza local 3x3 -> bines -> Shannon.
+    """Entropía espacial 2D: varianza local 3x3 normalizada -> bines -> Shannon.
 
-    Implementada en C-extension aqui caeria bien, pero stdlib es suficiente
-    para 512x512 (~250k pixeles).
+    Fallback in-line (idéntica lógica a palettes.spatial_entropy_2d).
+    Normaliza por h² para invariancia a resolución.
     """
     if _spatial_entropy_palettes is not None:
         return _spatial_entropy_palettes(intensity)
 
-    # Fallback in-line (idéntica lógica).
     h = len(intensity)
     w = len(intensity[0])
     if h < 3 or w < 3:
         return 0.0
+    hx = 2.0 / w
+    hy = 2.0 / h
+    h2 = hx * hy
     hist = [0] * 8
     for py in range(1, h - 1):
         for px in range(1, w - 1):
@@ -177,7 +179,8 @@ def _spatial_entropy(intensity):
                     var += (intensity[py + dy][px + dx] - c) ** 2
                     n += 1
             var /= n
-            hist[min(7, int(var * 256))] += 1
+            var_norm = var / h2 if h2 > 0 else 0.0
+            hist[min(7, int(var_norm * 256))] += 1
     total = sum(hist)
     if total == 0:
         return 0.0
@@ -335,13 +338,33 @@ def main(argv=None):
             f for f in os.listdir(args.out_dir)
             if f.startswith("dream_") and (f.endswith(".png") or f.endswith(".pgm"))
         )
+        # Calcular min/avg de entropia espacial del lote actual para la cabecera.
+        # Los legacy .pgm no tienen ent_spatial (no se midio), quedan con 0.0.
+        valid_sp = [e for e in spatial_entropies if e > 0] or [0.0]
+        ent_min = min(valid_sp)
+        ent_avg = avg_spatial
+
         with open(index_path, "w") as f:
             f.write(f"# Motor de Imaginacion — Indice de galeria\n")
             f.write(f"# Paleta por defecto: {args.palette}\n")
             f.write(f"# Dimension: {args.width}x{args.height}\n")
             f.write(f"# Total archivos: {len(existing)}\n")
+            f.write(f"# Entropia espacial (min, avg): {ent_min:.2f}, {ent_avg:.2f}\n")
+            # Enriquecer cada línea con palette + ent_spatial si está disponible.
+            ent_by_seed = {m["seed"]: m.get("entropy_spatial", 0.0) for m in metas}
             for name in existing:
-                f.write(name + "\n")
+                # Extraer seed del nombre (dream_<seed>.png|pgm).
+                try:
+                    seed = int(name.split("_")[1].split(".")[0])
+                except (IndexError, ValueError):
+                    f.write(name + "\n")
+                    continue
+                ent = ent_by_seed.get(seed, 0.0)
+                if ent > 0:
+                    f.write(f"{name} palette={args.palette} ent_spatial={ent:.2f}\n")
+                else:
+                    # Legacy sin medir — solo el nombre, parseIndex cae al default.
+                    f.write(name + "\n")
         print(f"  Índice actualizado: {index_path} ({len(existing)} archivos)")
 
         # Sidecar con metadata rica (incluye entropia espacial por imagen).

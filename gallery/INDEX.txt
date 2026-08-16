@@ -1,3 +1,8 @@
+# Motor de Imaginacion — Indice de galeria
+# Paleta por defecto: twilight
+# Dimension: 256x256
+# Total archivos: 36
+# Entropia espacial (min, avg): 1.21, 1.25
 dream_1785812859.pgm
 dream_1785813262.pgm
 dream_1785813267.pgm
@@ -6,3 +11,31 @@ dream_1786336903.pgm
 dream_1786336904.pgm
 dream_1786336906.pgm
 dream_1786336907.pgm
+dream_1786893955.png
+dream_1786893956.png
+dream_1786893957.png
+dream_1786893958.png
+dream_1786893959.png
+dream_1786893960.png
+dream_1786893961.png
+dream_1786893962.png
+dream_1786893991.png
+dream_1786893992.png
+dream_1786893993.png
+dream_1786893994.png
+dream_1786893995.png
+dream_1786893996.png
+dream_1786893997.png
+dream_1786893998.png
+dream_1786897674.png
+dream_1786897675.png
+dream_1786897676.png
+dream_1786897677.png
+dream_1786897678.png
+dream_1786897679.png
+dream_1786897680.png
+dream_1786897681.png
+dream_1786897832.png
+dream_1786897833.png
+dream_1786897861.png palette=twilight ent_spatial=1.21
+dream_1786897862.png palette=twilight ent_spatial=1.30

@@ -30,17 +30,24 @@ function parseIndex(txt) {
             // Cabecera Fase 2
             const m1 = line.match(/paleta por defecto:\s*([\w-]+)/i);
             if (m1) meta.palette = m1[1].toLowerCase();
-            const m2 = line.match(/entrop[ií]a espacial.*?\(([-\d.]+)\s*,\s*([-\d.]+)\)/i);
+            // Tolera tanto "# Entropia espacial (min, avg): 0.00, 0.01"
+            // como "# Entropia espacial: min=0.00, avg=0.01".
+            // Regex: despues de ":" vienen los dos numeros.
+            const m2 = line.match(/entrop[ií]a espacial.*?\)\s*:\s*([-\d.]+)\s*,\s*([-\d.]+)/i);
             if (m2) {
                 meta.entSpatialMin = parseFloat(m2[1]);
                 meta.entSpatialAvg = parseFloat(m2[2]);
             }
             continue;
         }
-        if (!(line.endsWith('.pgm') || line.endsWith('.png'))) continue;
-        // línea "name palette=viridis ent_spatial=4.20"
+        // Extraer el primer token (nombre de archivo) y verificar sufijo.
+        // Antes se hacia line.endsWith() sobre TODA la linea, lo cual falla
+        // cuando hay " name.png palette=viridis ent_spatial=0.03"
+        // (la línea termina en "0.03", no en ".png").
         const parts = line.split(/\s+/);
         const name = parts[0];
+        if (!(name.endsWith('.pgm') || name.endsWith('.png'))) continue;
+        // línea "name palette=viridis ent_spatial=4.20"
         let pal = meta.palette;
         let ent = null;
         for (const p of parts.slice(1)) {
@@ -162,9 +169,13 @@ async function renderGallery() {
         const resp = await fetch('gallery/INDEX.txt');
         if (!resp.ok) throw new Error('INDEX.txt no encontrado');
         const txt = await resp.text();
-        const files = txt.split('\n').map(f => f.trim()).filter(
-            f => f.endsWith('.pgm') || f.endsWith('.png')
-        );
+
+        // Fase 2: parsear el INDEX tolerando cabecera legacy y enriquecida.
+        const parsed = parseIndex(txt);
+        indexMeta = parsed;
+        renderMetaPanel();
+
+        const files = parsed.files.map(f => f.name);
 
         if (files.length === 0) {
             gallery.innerHTML = '<p>Galería aún sin sueños. Espera al primer ciclo.</p>';

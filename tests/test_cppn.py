@@ -106,8 +106,9 @@ class TestCPPNImage(unittest.TestCase):
             self.assertIn("INDEX.txt", files)
             with open(os.path.join(tmp, "INDEX.txt")) as f:
                 # Filtramos lineas vacias y comentarios de cabecera (#).
+                # Formato Fase 2: "dream_1000.png palette=viridis ent_spatial=1.23"
                 lines = [
-                    l.strip() for l in f
+                    l.strip().split()[0] for l in f
                     if l.strip() and not l.strip().startswith("#")
                 ]
             self.assertEqual(len(lines), 3)
@@ -121,10 +122,10 @@ class TestCPPNImage(unittest.TestCase):
     # ---------------------------------------------------------------------------
 
     def test_palettes_all_available(self):
-        """Las 5 paletas prometidas estan registradas."""
+        """Las 7 paletas prometidas estan registradas."""
         self.assertEqual(
             set(list_palettes()),
-            {"viridis", "magma", "plasma", "inferno", "turbo"},
+            {"viridis", "magma", "plasma", "inferno", "turbo", "cividis", "twilight"},
         )
 
     def test_palette_determinism(self):

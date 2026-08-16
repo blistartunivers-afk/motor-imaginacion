@@ -101,6 +101,30 @@ _TURBO_STOPS = [
     (0.474, 0.015, 0.027),   # 1.0  - dark red
 ]
 
+# Cividis (colorblind-safe, perceptually uniform) - matplotlib CC0
+_CIVIDIS_STOPS = [
+    (0.002, 0.009, 0.174),   # 0.0  - dark blue
+    (0.008, 0.159, 0.372),   # 0.14
+    (0.040, 0.278, 0.497),   # 0.28
+    (0.113, 0.391, 0.569),   # 0.42
+    (0.231, 0.498, 0.594),   # 0.57
+    (0.400, 0.606, 0.571),   # 0.71
+    (0.627, 0.715, 0.486),   # 0.85
+    (0.894, 0.831, 0.345),   # 1.0  - yellow
+]
+
+# Twilight (diverging, colorblind-safe) - matplotlib CC0
+_TWILIGHT_STOPS = [
+    (0.255, 0.007, 0.358),   # 0.0  - dark purple
+    (0.421, 0.074, 0.557),   # 0.14
+    (0.589, 0.158, 0.644),   # 0.28
+    (0.727, 0.282, 0.620),   # 0.42
+    (0.827, 0.447, 0.498),   # 0.57 - center (white-ish)
+    (0.827, 0.447, 0.498),   # 0.71 - symmetric
+    (0.727, 0.282, 0.620),   # 0.85
+    (0.589, 0.158, 0.644),   # 1.0
+]
+
 
 # ---------------------------------------------------------------------------
 # Registro y acceso
@@ -112,6 +136,8 @@ REGISTRY = {
     "inferno": _INFERNO_STOPS,
     "magma":   _MAGMA_STOPS,
     "turbo":   _TURBO_STOPS,
+    "cividis": _CIVIDIS_STOPS,
+    "twilight": _TWILIGHT_STOPS,
 }
 
 
@@ -152,14 +178,16 @@ def apply_palette(value, lut):
 # ---------------------------------------------------------------------------
 
 def spatial_entropy_2d(intensity):
-    """Entropía espacial 2D: varianza local 3x3 -> 8 bines -> Shannon.
+    """Entropía espacial 2D: varianza local 3x3 normalizada -> 8 bines -> Shannon.
 
     Para cada pixel interior computo la varianza local en su vecindad
-    3x3 (incluyendo el centro, n=9 muestras). Esa varianza cuantizada a
-    8 niveles va a un histograma y se calcula Shannon.
+    3x3 (incluyendo el centro, n=9 muestras). La varianza se normaliza
+    por el espaciado de píxeles al cuadrado (h²) para ser invariante
+    a la resolución. Esa varianza normalizada cuantizada a 8 niveles
+    va a un histograma y se calcula Shannon.
 
-    Detecta patrones independientemente de su valor absoluto: dos
-    imágenes pueden tener el mismo Shannon global pero diferente
+    Detecta patrones independientemente de su valor absoluto y resolución:
+    dos imágenes pueden tener el mismo Shannon global pero diferente
     complejidad espacial.
 
     Args:
@@ -172,6 +200,10 @@ def spatial_entropy_2d(intensity):
     w = len(intensity[0])
     if h < 3 or w < 3:
         return 0.0
+    # Espaciado en coordenadas normalizadas [-1, 1] (CPPN usa este espacio)
+    hx = 2.0 / w
+    hy = 2.0 / h
+    h2 = hx * hy  # área del pixel en espacio normalizado
     hist = [0] * 8
     for py in range(1, h - 1):
         for px in range(1, w - 1):
@@ -183,7 +215,9 @@ def spatial_entropy_2d(intensity):
                     var += (intensity[py + dy][px + dx] - c) ** 2
                     n += 1
             var /= n
-            hist[min(7, int(var * 256))] += 1
+            # Normalizar por h² para invariancia a resolución
+            var_norm = var / h2 if h2 > 0 else 0.0
+            hist[min(7, int(var_norm * 256))] += 1
     total = sum(hist)
     if total == 0:
         return 0.0
