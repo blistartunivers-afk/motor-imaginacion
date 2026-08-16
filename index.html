@@ -401,11 +401,63 @@
             transform: rotate(90deg) scale(1.15);
             box-shadow: 0 0 15px var(--neon);
         }
+
+        /* === META PANEL (Fase 2) === */
+        .meta-chip {
+            display: inline-block;
+            padding: 5px 12px;
+            border: 1px solid var(--cyan);
+            border-radius: 14px;
+            color: var(--cyan);
+            background: rgba(0, 204, 255, 0.05);
+            letter-spacing: 0.5px;
+        }
+        .meta-chip b { color: var(--neon); margin-left: 4px; }
+        .meta-chip a { border-bottom: none; }
+
+        /* === FILTRO POR PALETA === */
+        .filter-btn {
+            display: inline-block;
+            padding: 4px 10px;
+            border: 1px solid var(--neon-dim);
+            border-radius: 12px;
+            color: var(--neon-dim);
+            background: transparent;
+            font-family: inherit;
+            font-size: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover { color: var(--neon); border-color: var(--neon); }
+        .filter-btn.active {
+            color: var(--bg);
+            background: var(--neon);
+            border-color: var(--neon);
+            box-shadow: 0 0 8px var(--neon);
+        }
+        .dream[data-palette-mismatch="true"] {
+            opacity: 0.18;
+            filter: grayscale(0.7);
+            transition: opacity 0.3s;
+        }
+        .dream[data-palette-mismatch="true"]:hover { opacity: 0.5; }
     </style>
 </head>
 <body>
     <h1>Galeria de Suenos CPPN</h1>
     <p class="subtitle">Arte generativo autonomo cultivado semanalmente por GitHub Actions</p>
+
+    <!-- Panel de Fase 2: paleta + entropía espacial del INDEX -->
+    <div id="meta-panel" style="position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:10px auto 6px;font-size:0.85em;">
+        <span id="meta-palette" class="meta-chip">paleta: <b>—</b></span>
+        <span id="meta-entropy" class="meta-chip">entropía espacial: <b>—</b></span>
+        <span id="meta-count"   class="meta-chip">sueños: <b>—</b></span>
+        <span id="meta-link"    class="meta-chip"><a href="motor-imaginacion.html" target="_blank">⚡ re-sueño interactivo</a></span>
+    </div>
+
+    <!-- Filtro por paleta (lee del INDEX) -->
+    <div id="filter-bar" style="position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 auto 14px;font-size:0.8em;"></div>
+
     <div id="status"></div>
     <div class="gallery" id="gallery"></div>
     <p class="footer">

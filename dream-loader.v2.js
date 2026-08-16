@@ -1,9 +1,68 @@
 // ============================================
 // DREAM LOADER · Motor de Imaginación CPPN
-// Features: render, paletas, parallax 3D, modal
+// Features: render, paletas, parallax 3D, modal,
+//           header INDEX Fase 2 (paleta + ent_spatial),
+//           filtro por paleta, badge de entropía
 // ============================================
 
 let dreamsCache = {}; // filename -> canvas
+let indexMeta = {
+    palette: null,         // paleta por defecto del INDEX
+    entSpatialMin: null,   // mínimo entropía espacial del lote
+    entSpatialAvg: null,   // promedio
+    files: [],             // [{name, palette, entSpatial}]
+};
+let currentFilter = 'all';
+
+/**
+ * Parsea el INDEX.txt tolerando tanto la versión legacy
+ * (solo nombres de archivo) como la Fase 2 con cabecera
+ *   # Paleta por defecto: viridis
+ *   # Entropía espacial (min, avg): 4.12, 4.65
+ *   dream_xxx.png  palette=magma  ent_spatial=4.30
+ */
+function parseIndex(txt) {
+    const meta = { palette: null, entSpatialMin: null, entSpatialAvg: null, files: [] };
+    for (const rawLine of txt.split('\n')) {
+        const line = rawLine.trim();
+        if (!line) continue;
+        if (line.startsWith('#')) {
+            // Cabecera Fase 2
+            const m1 = line.match(/paleta por defecto:\s*([\w-]+)/i);
+            if (m1) meta.palette = m1[1].toLowerCase();
+            const m2 = line.match(/entrop[ií]a espacial.*?\(([-\d.]+)\s*,\s*([-\d.]+)\)/i);
+            if (m2) {
+                meta.entSpatialMin = parseFloat(m2[1]);
+                meta.entSpatialAvg = parseFloat(m2[2]);
+            }
+            continue;
+        }
+        if (!(line.endsWith('.pgm') || line.endsWith('.png'))) continue;
+        // línea "name palette=viridis ent_spatial=4.20"
+        const parts = line.split(/\s+/);
+        const name = parts[0];
+        let pal = meta.palette;
+        let ent = null;
+        for (const p of parts.slice(1)) {
+            const [k, v] = p.split('=');
+            if (k === 'palette' && v) pal = v.toLowerCase();
+            if (k === 'ent_spatial' && v) ent = parseFloat(v);
+        }
+        meta.files.push({ name, palette: pal || 'raw', entSpatial: ent });
+    }
+    return meta;
+}
+
+function applyFilter(palette) {
+    currentFilter = palette;
+    document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.filter === palette);
+    });
+    document.querySelectorAll('.dream').forEach(el => {
+        const matches = (palette === 'all') || (el.dataset.palette === palette);
+        el.dataset.paletteMismatch = (!matches).toString();
+    });
+}
 
 async function loadDream(filename) {
     if (dreamsCache[filename]) {
