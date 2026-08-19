@@ -1,0 +1,24 @@
+{
+  "palette": "twilight",
+  "width": 256,
+  "height": 256,
+  "count": 2,
+  "avg_entropy_shannon": 7.1192799456478255,
+  "avg_entropy_spatial": 1.2537234314122947,
+  "items": [
+    {
+      "seed": 1786897861,
+      "filename": "dream_1786897861.png",
+      "entropy_shannon": 7.205514143203738,
+      "entropy_spatial": 1.2065274248539388,
+      "unique_grays": 254
+    },
+    {
+      "seed": 1786897862,
+      "filename": "dream_1786897862.png",
+      "entropy_shannon": 7.033045748091912,
+      "entropy_spatial": 1.3009194379706508,
+      "unique_grays": 249
+    }
+  ]
+}
