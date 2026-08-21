@@ -171,6 +171,16 @@ async function renderGallery() {
         const txt = await resp.text();
 
         // Fase 2: parsear el INDEX tolerando cabecera legacy y enriquecida.
+        function renderMetaPanel() {
+            const regime = document.getElementById('regime');
+            if (regime && indexMeta.palette) {
+                regime.textContent = `● ${indexMeta.palette}`;
+            }
+            const bars = document.getElementById('bars');
+            if (bars && indexMeta.entSpatialAvg !== null) {
+                bars.innerHTML = `<div class="barRow"><span class="barName">Entropía</span><div class="barTrack"><div class="barFill" style="width:${(indexMeta.entSpatialAvg/5)*100}%"></div></div><span class="barPct">${indexMeta.entSpatialAvg.toFixed(2)}</span></div>`;
+            }
+        }
         const parsed = parseIndex(txt);
         indexMeta = parsed;
         renderMetaPanel();
