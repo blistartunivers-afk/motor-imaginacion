@@ -4,3 +4,11 @@ __pycache__/
 *.py.bak
 motor-imaginacion.html
 *.bak3
+# Security
+*.pem
+*.key
+*.gpg
+.env*
+*.secret
+secrets/
+
