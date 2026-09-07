@@ -3,64 +3,64 @@
   "width": 512,
   "height": 512,
   "count": 8,
-  "avg_entropy_shannon": 6.588760823238876,
-  "avg_entropy_spatial": 1.489587666893529,
+  "avg_entropy_shannon": 6.60847229368054,
+  "avg_entropy_spatial": 1.359863631580039,
   "items": [
     {
-      "seed": 1788168616,
-      "filename": "dream_1788168616.png",
-      "entropy_shannon": 7.269217182481796,
-      "entropy_spatial": 1.487083158363763,
+      "seed": 1788768277,
+      "filename": "dream_1788768277.png",
+      "entropy_shannon": 7.760015475777653,
+      "entropy_spatial": 0.9166987303856649,
+      "unique_grays": 237
+    },
+    {
+      "seed": 1788768278,
+      "filename": "dream_1788768278.png",
+      "entropy_shannon": 7.819654397392336,
+      "entropy_spatial": 0.786040798605731,
       "unique_grays": 254
     },
     {
-      "seed": 1788168617,
-      "filename": "dream_1788168617.png",
-      "entropy_shannon": 3.7625105989457888,
-      "entropy_spatial": 1.44124009458794,
-      "unique_grays": 255
+      "seed": 1788768279,
+      "filename": "dream_1788768279.png",
+      "entropy_shannon": 7.162189695582633,
+      "entropy_spatial": 1.3601347193202962,
+      "unique_grays": 250
     },
     {
-      "seed": 1788168618,
-      "filename": "dream_1788168618.png",
-      "entropy_shannon": 6.743555068129578,
-      "entropy_spatial": 1.7438301784074959,
-      "unique_grays": 254
-    },
-    {
-      "seed": 1788168619,
-      "filename": "dream_1788168619.png",
-      "entropy_shannon": 7.372042563235374,
-      "entropy_spatial": 1.0800779346780367,
-      "unique_grays": 222
-    },
-    {
-      "seed": 1788168620,
-      "filename": "dream_1788168620.png",
-      "entropy_shannon": 7.34475030585877,
-      "entropy_spatial": 1.346315561934017,
-      "unique_grays": 255
-    },
-    {
-      "seed": 1788168621,
-      "filename": "dream_1788168621.png",
-      "entropy_shannon": 7.2995342305822595,
-      "entropy_spatial": 1.374767114247697,
+      "seed": 1788768280,
+      "filename": "dream_1788768280.png",
+      "entropy_shannon": 7.605547575919888,
+      "entropy_spatial": 0.7708760765680411,
       "unique_grays": 251
     },
     {
-      "seed": 1788168622,
-      "filename": "dream_1788168622.png",
-      "entropy_shannon": 6.710213224565974,
-      "entropy_spatial": 1.6901787260651127,
+      "seed": 1788768281,
+      "filename": "dream_1788768281.png",
+      "entropy_shannon": 6.847256958712874,
+      "entropy_spatial": 1.7118049646552738,
+      "unique_grays": 255
+    },
+    {
+      "seed": 1788768282,
+      "filename": "dream_1788768282.png",
+      "entropy_shannon": 7.26879132679958,
+      "entropy_spatial": 1.7200088396682796,
       "unique_grays": 253
     },
     {
-      "seed": 1788168623,
-      "filename": "dream_1788168623.png",
-      "entropy_shannon": 6.208263412111463,
-      "entropy_spatial": 1.75320856686417,
-      "unique_grays": 254
+      "seed": 1788768283,
+      "filename": "dream_1788768283.png",
+      "entropy_shannon": 3.9559319209417465,
+      "entropy_spatial": 1.938782634740433,
+      "unique_grays": 248
+    },
+    {
+      "seed": 1788768284,
+      "filename": "dream_1788768284.png",
+      "entropy_shannon": 4.448390998317614,
+      "entropy_spatial": 1.6745622886965918,
+      "unique_grays": 255
     }
   ]
 }
