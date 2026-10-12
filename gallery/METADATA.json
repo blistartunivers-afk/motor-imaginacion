@@ -3,64 +3,64 @@
   "width": 512,
   "height": 512,
   "count": 8,
-  "avg_entropy_shannon": 6.510071658005158,
-  "avg_entropy_spatial": 1.6098752407204708,
+  "avg_entropy_shannon": 6.672487221644673,
+  "avg_entropy_spatial": 1.4972979499484116,
   "items": [
     {
-      "seed": 1791195051,
-      "filename": "dream_1791195051.png",
-      "entropy_shannon": 7.090955300331048,
-      "entropy_spatial": 1.7091681939729853,
-      "unique_grays": 250
-    },
-    {
-      "seed": 1791195052,
-      "filename": "dream_1791195052.png",
-      "entropy_shannon": 6.108841710707497,
-      "entropy_spatial": 1.441565481611015,
-      "unique_grays": 250
-    },
-    {
-      "seed": 1791195053,
-      "filename": "dream_1791195053.png",
-      "entropy_shannon": 7.57309641794433,
-      "entropy_spatial": 1.2147895305683258,
-      "unique_grays": 235
-    },
-    {
-      "seed": 1791195054,
-      "filename": "dream_1791195054.png",
-      "entropy_shannon": 6.141025685403569,
-      "entropy_spatial": 1.8315448097100182,
-      "unique_grays": 254
-    },
-    {
-      "seed": 1791195055,
-      "filename": "dream_1791195055.png",
-      "entropy_shannon": 6.31979979007143,
-      "entropy_spatial": 2.0008942695193506,
-      "unique_grays": 232
-    },
-    {
-      "seed": 1791195056,
-      "filename": "dream_1791195056.png",
-      "entropy_shannon": 6.9805419895151575,
-      "entropy_spatial": 1.4779984692115884,
-      "unique_grays": 254
-    },
-    {
-      "seed": 1791195057,
-      "filename": "dream_1791195057.png",
-      "entropy_shannon": 5.558926959874444,
-      "entropy_spatial": 1.517422546559282,
-      "unique_grays": 252
-    },
-    {
-      "seed": 1791195058,
-      "filename": "dream_1791195058.png",
-      "entropy_shannon": 6.307385410193789,
-      "entropy_spatial": 1.6856186246112022,
+      "seed": 1791800899,
+      "filename": "dream_1791800899.png",
+      "entropy_shannon": 6.719697722453362,
+      "entropy_spatial": 1.470047391366621,
       "unique_grays": 255
+    },
+    {
+      "seed": 1791800900,
+      "filename": "dream_1791800900.png",
+      "entropy_shannon": 6.486055893215306,
+      "entropy_spatial": 1.5927060119058933,
+      "unique_grays": 254
+    },
+    {
+      "seed": 1791800901,
+      "filename": "dream_1791800901.png",
+      "entropy_shannon": 7.0708792937679865,
+      "entropy_spatial": 1.458451273542748,
+      "unique_grays": 250
+    },
+    {
+      "seed": 1791800902,
+      "filename": "dream_1791800902.png",
+      "entropy_shannon": 7.323892970283487,
+      "entropy_spatial": 1.0226750013969115,
+      "unique_grays": 207
+    },
+    {
+      "seed": 1791800903,
+      "filename": "dream_1791800903.png",
+      "entropy_shannon": 6.768983692236122,
+      "entropy_spatial": 1.6704516619473948,
+      "unique_grays": 246
+    },
+    {
+      "seed": 1791800904,
+      "filename": "dream_1791800904.png",
+      "entropy_shannon": 5.5104779972789775,
+      "entropy_spatial": 1.438636155920085,
+      "unique_grays": 255
+    },
+    {
+      "seed": 1791800905,
+      "filename": "dream_1791800905.png",
+      "entropy_shannon": 6.775108782949675,
+      "entropy_spatial": 1.805236991257894,
+      "unique_grays": 254
+    },
+    {
+      "seed": 1791800906,
+      "filename": "dream_1791800906.png",
+      "entropy_shannon": 6.724801420972465,
+      "entropy_spatial": 1.5201791122497448,
+      "unique_grays": 254
     }
   ]
 }
