@@ -1,8 +1,8 @@
 # Motor de Imaginacion — Indice de galeria
 # Paleta por defecto: viridis
 # Dimension: 512x512
-# Total archivos: 124
-# Entropia espacial (min, avg): 0.78, 1.46
+# Total archivos: 132
+# Entropia espacial (min, avg): 0.61, 1.45
 dream_1785812859.pgm
 dream_1785813262.pgm
 dream_1785813267.pgm
@@ -119,11 +119,19 @@ dream_1792399082.png
 dream_1792399083.png
 dream_1792399084.png
 dream_1792399085.png
-dream_1793616218.png palette=viridis ent_spatial=0.78
-dream_1793616219.png palette=viridis ent_spatial=1.29
-dream_1793616220.png palette=viridis ent_spatial=0.88
-dream_1793616221.png palette=viridis ent_spatial=1.71
-dream_1793616222.png palette=viridis ent_spatial=1.96
-dream_1793616223.png palette=viridis ent_spatial=1.88
-dream_1793616224.png palette=viridis ent_spatial=1.44
-dream_1793616225.png palette=viridis ent_spatial=1.73
+dream_1793616218.png
+dream_1793616219.png
+dream_1793616220.png
+dream_1793616221.png
+dream_1793616222.png
+dream_1793616223.png
+dream_1793616224.png
+dream_1793616225.png
+dream_1794222427.png palette=viridis ent_spatial=1.91
+dream_1794222428.png palette=viridis ent_spatial=1.37
+dream_1794222429.png palette=viridis ent_spatial=1.26
+dream_1794222430.png palette=viridis ent_spatial=1.72
+dream_1794222431.png palette=viridis ent_spatial=0.61
+dream_1794222432.png palette=viridis ent_spatial=1.89
+dream_1794222433.png palette=viridis ent_spatial=1.49
+dream_1794222434.png palette=viridis ent_spatial=1.40
