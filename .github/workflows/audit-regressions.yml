@@ -1,0 +1,16 @@
+name: Audit regressions
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  regression:
+    name: Audit regressions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - run: python3 scripts/test_check_sarif.py
+      - run: python3 -m pip install --require-hashes -r requirements.txt
+      - run: python3 -m unittest discover -s tests
+      - run: python3 scripts/test_publish_generated.py
