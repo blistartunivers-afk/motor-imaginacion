@@ -41,3 +41,11 @@ El motor de imaginación ha sido actualizado con capacidades avanzadas de análi
 ## 📜 Licencia
 
 MIT License © 2026 blistartunivers-afk
+
+Dependency baseline: Python >=3.11 and hash-locked Pillow 13.0.0. Install with
+`python -m pip install --require-hashes -r requirements.txt`.
+
+La galería programada conserva la publicación autónoma con la rama principal
+protegida: publica un candidato, ejecuta los dos workflows de verificación sobre
+su SHA y solo hace un avance normal de master si ambos pasan y master no cambió.
+Un fallo conserva el candidato sin fabricar estados verdes ni forzar el push.
